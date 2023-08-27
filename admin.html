@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="admin.js"></script>
+    <title>ColmanBank</title>
+  </head>
+  <body>
+    <header>
+        <div class="headerContent">
+            <h1>Colman Bank</h1>
+            <h3>Welcome to the Colman Bank, Admin.</h3>
+        </div>
+        <button id="logoutButton">Logout</button>
+    </header>
+    <div class="main">
+        <div class="userManagement">
+            <h2>User Management</h2>
+            <h3>Add User</h3>
+            <form id="addUserForm">
+                <div class="rowForm">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" placeholder="Username" required />
+                </div>
+                <div class="rowForm">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" placeholder="Password" required />
+                </div>
+                <div class="rowForm">
+                    <label for="type">Type:</label>
+                    <select id="userType">
+                        <option value="admin">Admin</option>
+                        <option value="user">User</option>
+                    </select>
+                </div>
+                <div class="rowForm">
+                    <label for="firstName">First Name:</label>
+                    <input type="text" id="firstName" placeholder="First name" required />
+                </div>
+                <div class="rowForm">
+                    <label for="lastName">Last Name:</label>
+                    <input type="text" id="lastName" placeholder="Last name" required />
+                </div>
+                <div class="rowForm">
+                    <label for="address">Address:</label>
+                    <input type="text" id="address" placeholder="Address" required />
+                </div>
+                <div class="rowForm">
+                    <label for="phone">Phone Number:</label>
+                    <input type="text" id="phoneNumber" placeholder="Phone Number" required />
+                </div>
+                <div class="rowForm">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" placeholder="Email" required />
+                </div>
+                
+                <button type="submit">Add User</button>
+            </form>
+        </div>
+        <div class="accounts">
+            <h2>Accounts</h2>
+            <ul id="accountList"></ul>
+        </div>
+    </div>
+    <!-- Modal to display account details -->
+    <div id="accountModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="accountDetails">
+                <h2 id="name"></h2>
+                <div class="modalRow">
+                    <h4>Username:</h4>
+                    <p id="usernameModal"></p>
+                </div>
+                <div class="modalRow">
+                    <h4>Address:</h4>
+                    <p id="addressModal"></p>
+                </div>
+                <div class="modalRow">
+                    <h4>Phone number:</h4>
+                    <p id="phoneModal"></p>
+                </div>
+                <div class="modalRow">
+                    <h4>Email:</h4>
+                    <p id="emailModal"></p>
+                </div>
+                <div class="modalRow">
+                    <h4>Balance:</h4>
+                    <p id="balanceModal"></p>
+                </div>
+            </div>  
+        </div>
+    </div>
+  </body>
+</html>

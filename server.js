@@ -1,7 +1,7 @@
 /*
 
 בקובץ הזה יש את כל הפונקציונליות של השרת
-כרגע יש בו רק א הלוגיקה של הרצת השרת בכתובת
+כרגע יש בו רק א הלוגיקה של הרצת השאת בכתובת
 http://localhost:3000
 כשהדף הראשון שמגיעים אליו הוא דף ההתחברות
 ורק לאחר התחברות מגיעים לדף הבית (בהתאם לאדמין ומשתמש רגיל)
@@ -10,13 +10,13 @@ app.post('/login', (req, res) => {
 
 בהמשך כשאחבר את הפרויקט למונגו אז אני אוסיף לפונקציה הזו לוגיקה שתבדוק מול הפרטים שבמונגו
 האם שם המשתמש והסיסמה שהוזנו נכונים
-npm i path 
+
 */
 
 const path = require("path");
-const express = require("express");
+const express = require("express")
 const { MongoClient } = require("mongodb");
-// const userManagement = require("express-user-management");
+
 const app = express();
 
 // Serve static files from the "public" directory
@@ -25,13 +25,13 @@ app.use(express.static("public"));
 // Parse JSON request bodies
 app.use(express.json());
 
-// MongoDB configuration
+// MongoDB configuration ברגע הרצת הקוד, מתחברים לשרת הנתונים בכתובת והפורט המתאים,שרת הנתונים מקבל את השם שלו ופותח תיקיות משתמשים ותקיות חשבונות בנק
 const mongoURI = "mongodb://localhost:27017";
 const dbName = "colmanBankApp";
 const usersCollection = "users";
 const accountsCollection = "accounts";
 
-// Connect to MongoDB
+// Connect to MongoDB פקודת התחברות למונגו דיבי מסד הנתונים שלנו
 let db;
 
 MongoClient.connect(mongoURI, { useUnifiedTopology: true })
@@ -86,7 +86,7 @@ MongoClient.connect(mongoURI, { useUnifiedTopology: true })
 app.post("/login", (req, res) => {
   const { username, password } = req.body;
 
-  // Find the user in the MongoDB collection
+  // Find the user in the MongoDB collection 
   db.collection(usersCollection)
     .findOne({ username, password })
     .then((user) => {
@@ -104,7 +104,14 @@ app.post("/login", (req, res) => {
 
 // Handle add user
 app.post('/addUser', (req, res) => {
-  const { username, password, userType } = req.body;
+  const { username, 
+    password, 
+    userType, 
+    firstName, 
+    lastName,
+    address,
+    phoneNumber,
+    email } = req.body;
 
   // Set up collection references
   const users = db.collection(usersCollection);
@@ -133,6 +140,11 @@ app.post('/addUser', (req, res) => {
             const newAccount = {
               accountNumber,
               username,
+              firstName,
+              lastName,
+              address,
+              phoneNumber,
+              email,
               accountMovements: [],
               balance: Math.floor(Math.random() * 5000)
             };
@@ -250,9 +262,7 @@ app.get('/user/:username', (req, res) => {
 
           return res.json({ 
             success: true,
-            username: username, 
-            balance: balance, 
-            transactions: transactions 
+            account: account
           })
         })
         .catch((error) => {
@@ -293,10 +303,10 @@ app.post('/transfer', (req, res) => {
       const senderAccountNumber = senderUser.bankAccountNumber;
 
       // Get recipient account information
-      users.findOne({ username: recipientUsername, bankAccountNumber: recipientAccountNumber })
+      users.findOne({ bankAccountNumber: recipientAccountNumber })
         .then((recipientUser) => {
           if (!recipientUser) {
-            return res.json({ success: false, message: 'Recipient not found or account number mismatch.' });
+            return res.json({ success: false, message: 'Recipient not found.' });
           }
 
           if (recipientUser.type !== 'user') {
@@ -345,7 +355,7 @@ app.post('/transfer', (req, res) => {
                           // Update recipient's account movements array with the deposit details
                           const recipientMovement = {
                             date: new Date().toISOString(),
-                            description: `Transfer from ${senderAccountNumber}`,
+                            description: `Transfer from ${username}`,
                             amount: amount
                           };
 
@@ -439,20 +449,34 @@ app.post('/filterTransactions', (req, res) => {
     });
 });
 
+// Handle user logout
+app.get('/logout', (req, res) => {
+  // Clear the session data
+  req.session.destroy((err) => {
+    if (err) {
+      console.error('Error logging out:', err);
+    }
+    res.redirect('/');
+  });
+});
+
 // Start the server
 const port = 3000;
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
 
+// עמוד התחברות
 app.get("/", function (req, res) {
   res.sendFile(path.join(__dirname, "/login.html"));
 });
 
+// עמוד צד מנהלן
 app.get("/admin", function (req, res) {
   res.sendFile(path.join(__dirname, "/admin.html"));
 });
 
+//עמוד צד לקוח 
 app.get("/:username", function (req, res) {
   res.sendFile(path.join(__dirname, "/user.html"));
 });
